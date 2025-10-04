@@ -1,0 +1,77 @@
+# AI Factory .gitignore
+
+# Node.js / NPM
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+*.egg-info/
+dist/
+build/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment variables
+.env
+.env.local
+.env*.local
+
+# Logs
+logs/
+*.log
+
+# Test coverage
+coverage/
+.coverage
+htmlcov/
+.pytest_cache/
+.nyc_output/
+
+# Build outputs
+*.o
+*.a
+*.exe
+*.dll
+*.dylib
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Optional: Uncomment if repositories should be managed separately
+# repositories/*/
+# !repositories/README.md
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+*.swp
+
+# Editor files
+*.sublime-project
+*.sublime-workspace
+
+# Documentation build
+docs/_build/
+site/
+

@@ -1,0 +1,63 @@
+{
+  "factory_agent": {
+    "name": "Factory Coordinator",
+    "capabilities": [
+      "read_all_files",
+      "coordinate_sub_agents",
+      "update_status",
+      "create_prds",
+      "manage_tasks"
+    ],
+    "restrictions": [
+      "cannot_delete_prds",
+      "cannot_modify_completed_tasks",
+      "must_follow_workflow"
+    ]
+  },
+  "sub_agents": {
+    "prd_writer": {
+      "can_write": ["PRDs/*/prd.md"],
+      "can_read": [".claude/project/*"],
+      "cannot_modify": ["tasks.json", "TASK-*.md"]
+    },
+    "planner": {
+      "can_write": ["PRDs/*/plan.md", "PRDs/*/tasks.json", "PRDs/*/TASK-*.md"],
+      "can_read": ["PRDs/*/prd.md", ".claude/project/*"],
+      "cannot_modify": ["repositories/*"]
+    },
+    "coder": {
+      "can_write": ["repositories/*"],
+      "can_read": ["PRDs/*", ".claude/project/*"],
+      "must_follow": ["architecture.md", "task plans"]
+    },
+    "designer": {
+      "can_write": ["repositories/*"],
+      "can_read": ["PRDs/*", ".claude/project/*", "repositories/*"],
+      "focus": ["UI consistency", "design patterns", "component reuse"]
+    },
+    "tester": {
+      "can_write": ["repositories/*/tests/*", "PRDs/*/test-results.md"],
+      "can_read": ["PRDs/*", "repositories/*"],
+      "must_verify": ["all acceptance criteria", "edge cases"]
+    },
+    "git_manager": {
+      "can_write": [".claude/project/status.json", "PRDs/*/tasks.json"],
+      "can_read": ["*"],
+      "capabilities": [
+        "create_branches",
+        "tag_commits",
+        "generate_summaries",
+        "update_task_status"
+      ],
+      "cannot_modify": ["prd.md", "plan.md"]
+    }
+  },
+  "workflow_rules": {
+    "prd_creation": "Only PRD Writer can create initial PRD",
+    "planning": "Only Planner can create task plans",
+    "implementation": "Coder and Designer collaborate on implementation",
+    "testing": "Tester must verify before task completion",
+    "git_operations": "Only Git Manager updates branches and status"
+  }
+}
+
