@@ -35,11 +35,8 @@ This command customizes the AI Factory template for your specific project by:
 
 This interactively collects:
 - Project name and description
-- Repository structure (single/multi-repo)
-- Technology stack
-- Project goals
-- Coding standards
-- Existing documentation paths
+- Project type
+- Repository structure (single/multi-repo, existing/new)
 
 ### Step 2: Run Install Command
 
@@ -57,26 +54,18 @@ This processes the configuration and sets up the AI Factory.
 Generated content includes:
 - Project name and description
 - Project type and context
-- Main goals and objectives
-- Success criteria
 - Repository structure
 - Current phase (new vs existing project)
+- Placeholder sections for goals and success criteria (to be filled in)
 
 ### `.claude/project/architecture.md`
 
 Generated content includes:
-- Technology stack details
-  - Primary language
-  - Framework
-  - Database
-  - Other technologies
-- Coding standards
-  - Linter/formatter
-  - Style guide
-  - Testing framework
+- Project type and context
 - Repository structure
 - File organization conventions
 - Design principles
+- Placeholder for tech stack (to be filled in as you work)
 
 ### `.claude/project/status.json`
 
@@ -110,13 +99,6 @@ Initialized with:
 Updates:
 - Project name
 - Project description
-
-### Existing Documentation Import
-
-If existing documentation paths were provided:
-- Reads and incorporates README content
-- References existing docs in overview
-- Preserves project history and context
 
 ## Output
 

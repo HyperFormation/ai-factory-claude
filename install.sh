@@ -86,65 +86,6 @@ fi
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  TECHNOLOGY STACK"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-
-PRIMARY_LANGUAGE=$(prompt_with_default "Primary programming language" "")
-FRAMEWORK=$(prompt_with_default "Framework (if any)" "")
-DATABASE=$(prompt_with_default "Database (if any)" "")
-OTHER_TECH=$(prompt_with_default "Other key technologies (comma-separated)" "")
-
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  PROJECT GOALS"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-
-echo "What are the main goals for this project? (Enter multiple goals, one per line, empty line to finish):"
-GOALS=()
-while true; do
-    read -p "Goal: " goal
-    [ -z "$goal" ] && break
-    GOALS+=("$goal")
-done
-
-# Convert goals array to JSON
-GOALS_JSON="["
-for i in "${!GOALS[@]}"; do
-    [ $i -gt 0 ] && GOALS_JSON+=","
-    GOALS_JSON+="\"${GOALS[$i]}\""
-done
-GOALS_JSON+="]"
-
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  CODING STANDARDS"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-
-LINTER=$(prompt_with_default "Linter/formatter (e.g., eslint, prettier, black, none)" "")
-STYLE_GUIDE=$(prompt_with_default "Style guide (e.g., Airbnb, Google, PEP 8, none)" "")
-TEST_FRAMEWORK=$(prompt_with_default "Testing framework (e.g., Jest, pytest, none)" "")
-
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  EXISTING DOCUMENTATION"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-
-HAS_EXISTING_DOCS=$(prompt_yes_no "Do you have existing documentation to import?" "n")
-
-EXISTING_README=""
-EXISTING_DOCS=""
-
-if [ "$HAS_EXISTING_DOCS" = "true" ]; then
-    EXISTING_README=$(prompt_with_default "Path to README (relative or absolute)" "")
-    EXISTING_DOCS=$(prompt_with_default "Path to docs folder (optional)" "")
-fi
-
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  GENERATING CONFIGURATION..."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
@@ -158,20 +99,6 @@ cat > project.json << EOF
   "is_existing_project": $IS_EXISTING,
   "is_multi_repo": $IS_MULTI_REPO,
   "repositories": $REPO_LIST,
-  "tech_stack": {
-    "primary_language": "$PRIMARY_LANGUAGE",
-    "framework": "$FRAMEWORK",
-    "database": "$DATABASE",
-    "other_technologies": "$OTHER_TECH",
-    "linter": "$LINTER",
-    "style_guide": "$STYLE_GUIDE",
-    "test_framework": "$TEST_FRAMEWORK"
-  },
-  "goals": $GOALS_JSON,
-  "existing_documentation": {
-    "readme_path": "$EXISTING_README",
-    "docs_path": "$EXISTING_DOCS"
-  },
   "installation_date": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 }
 EOF
