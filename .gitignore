@@ -1,5 +1,8 @@
 # AI Factory .gitignore
 
+# Installation temporary files
+project.json
+
 # Node.js / NPM
 node_modules/
 npm-debug.log

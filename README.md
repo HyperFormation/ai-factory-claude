@@ -11,7 +11,32 @@ The AI Factory is a standardized system for managing software development throug
 - **Sub-Agents**: Specialized agents for PRD writing, planning, coding, design, testing, and git management
 - **Traceability**: Clear lineage from PRD → Plan → Tasks → Implementation
 
+## Installation
+
+The AI Factory is a **template** that must be configured for your specific project.
+
+### Quick Install
+
+```bash
+# 1. Clone AI Factory into your project
+git clone <ai-factory-repo> ./ai-factory
+cd ai-factory
+
+# 2. Run installation script (opens Claude Code automatically)
+./install.sh
+
+# 3. In Claude Code, paste and run (already in clipboard)
+/install
+
+# 4. Start using
+/prd Create user authentication system
+```
+
+See [INSTALLATION.md](INSTALLATION.md) for detailed installation options (subdirectory, project root, multi-repo, etc.).
+
 ## Quick Start
+
+Once installed, use these commands:
 
 ### 1. Create a PRD
 
@@ -53,33 +78,33 @@ This coordinates Coder, Designer, and Tester agents to implement, test, and veri
 ```
 .
 ├── .claude/
-│   └── project/
-│       ├── overview.md          # Project vision and goals
-│       ├── architecture.md      # Tech stack and standards
-│       ├── status.json          # Current progress tracking
-│       └── permissions.json     # Agent capabilities and limits
-│
-├── agents/
-│   ├── prd-writer.md           # PRD creation agent
-│   ├── planner.md              # Task planning agent
-│   ├── coder.md                # Implementation agent
-│   ├── designer.md             # UI consistency agent
-│   ├── tester.md               # Testing and verification agent
-│   └── git-manager.md          # Version control agent
+│   ├── CLAUDE.md               # Main instructions (imports project context)
+│   ├── settings.json           # Configuration and permissions
+│   ├── agents/                 # Sub-agent definitions
+│   │   ├── prd-writer.md       # PRD creation agent
+│   │   ├── planner.md          # Task planning agent
+│   │   ├── coder.md            # Implementation agent
+│   │   ├── designer.md         # UI consistency agent
+│   │   ├── tester.md           # Testing agent
+│   │   └── git-manager.md      # Version control agent
+│   ├── commands/               # Slash command definitions
+│   │   ├── prd.md              # /prd command
+│   │   ├── plan.md             # /plan command
+│   │   └── build.md            # /build command
+│   ├── project/                # Project context files
+│   │   ├── overview.md         # Project vision and goals
+│   │   ├── architecture.md     # Tech stack and standards
+│   │   ├── status.json         # Current progress tracking
+│   │   └── permissions.json    # Agent capabilities and limits
+│   └── memory/                 # Persistent memory storage
 │
 ├── PRDs/
 │   ├── PRD-001/
 │   │   ├── prd.md              # Product requirements
 │   │   ├── plan.md             # Implementation plan
 │   │   ├── tasks.json          # Task tracking
-│   │   ├── TASK-001.md         # Detailed task plans
-│   │   └── ...
+│   │   └── TASK-001.md         # Detailed task plans
 │   └── README.md
-│
-├── slash_commands/
-│   ├── prd.md                  # /prd command definition
-│   ├── plan.md                 # /plan command definition
-│   └── build.md                # /build command definition
 │
 ├── repositories/
 │   ├── project-name/           # Your actual code lives here
@@ -89,6 +114,17 @@ This coordinates Coder, Designer, and Tester agents to implement, test, and veri
 ```
 
 ## Slash Commands
+
+### `/install`
+
+Configure the AI Factory for your project (run after `./install.sh`).
+
+**Usage:**
+```
+/install
+```
+
+This is a **one-time setup** command that customizes the factory for your project. See [INSTALLATION.md](INSTALLATION.md) for details.
 
 ### `/prd [description]`
 

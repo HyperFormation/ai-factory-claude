@@ -1,0 +1,51 @@
+{
+  "name": "AI Factory",
+  "description": "Structured framework for AI-assisted software development with sub-agents and workflow automation",
+  "version": "1.0.0",
+  "permissions": {
+    "allowedTools": [
+      "read_file",
+      "write",
+      "search_replace",
+      "list_dir",
+      "grep",
+      "codebase_search",
+      "run_terminal_cmd",
+      "glob_file_search",
+      "delete_file"
+    ],
+    "allowedPaths": [
+      ".claude/",
+      "PRDs/",
+      "repositories/",
+      "README.md",
+      "STRUCTURE.md"
+    ],
+    "restrictedPaths": [
+      ".git/"
+    ]
+  },
+  "agents": {
+    "enabled": true,
+    "defaultAgentPath": ".claude/agents/"
+  },
+  "commands": {
+    "enabled": true,
+    "commandsPath": ".claude/commands/"
+  },
+  "memory": {
+    "enabled": true,
+    "memoryPath": ".claude/memory/"
+  },
+  "workflow": {
+    "autoCommit": false,
+    "requireTests": true,
+    "branchNaming": "prd-{prd_number}/task-{task_number}"
+  },
+  "quality": {
+    "runLinter": true,
+    "enforceTests": true,
+    "requireDocumentation": true
+  }
+}
+
