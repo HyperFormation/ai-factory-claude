@@ -1,6 +1,7 @@
 # AI Factory
 
-A structured framework for building software using Claude Code and specialized sub-agents.
+A structured framework for building software built on the claude code platform that will has a standardized way to track PRDs, tasks and have knowledge about a project's goals, scope and current status. Using specialized sub-agents, it is able to run loops in which agents work and check work in order to develop software in a way that meets established standards, requirements, architecture, scope. 
+
 
 ## Overview
 
