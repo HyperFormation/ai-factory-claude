@@ -5,10 +5,48 @@
 
 set -e
 
+CONFIG_FILE=".claude/configs/projects.json"
+REPO_DIR="repositories"
+
 echo "╔══════════════════════════════════════════════════════════════╗"
 echo "║          AI Factory - Project Installation Setup            ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo ""
+
+# Function to check for uncommitted changes in repositories
+check_uncommitted_code() {
+    if [ ! -d "$REPO_DIR" ]; then
+        return 0  # No repositories directory, nothing to check
+    fi
+
+    local has_uncommitted=false
+    local repos_with_changes=()
+
+    for repo_path in "$REPO_DIR"/*; do
+        if [ -d "$repo_path/.git" ]; then
+            repo_name=$(basename "$repo_path")
+            cd "$repo_path"
+            if ! git diff-index --quiet HEAD -- 2>/dev/null; then
+                has_uncommitted=true
+                repos_with_changes+=("$repo_name")
+            fi
+            cd - > /dev/null
+        fi
+    done
+
+    if [ "$has_uncommitted" = true ]; then
+        echo "ERROR: Cannot switch configurations - uncommitted changes detected!"
+        echo ""
+        echo "Repositories with uncommitted changes:"
+        for repo in "${repos_with_changes[@]}"; do
+            echo "  • $repo"
+        done
+        echo ""
+        echo "Please commit or stash changes in all repositories before switching configs."
+        exit 1
+    fi
+}
+
 echo "This script will configure the AI Factory for your project."
 echo "Please provide the following information:"
 echo ""
@@ -56,6 +94,55 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo ""
 
 PROJECT_NAME=$(prompt_with_default "Project name" "")
+
+# Check if config file exists and if this project is already configured
+if [ -f "$CONFIG_FILE" ]; then
+    # Check if project exists in config
+    if command -v jq &> /dev/null && jq -e ".projects[\"$PROJECT_NAME\"]" "$CONFIG_FILE" > /dev/null 2>&1; then
+        echo ""
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "  EXISTING CONFIGURATION FOUND"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo ""
+        echo "A configuration for '$PROJECT_NAME' already exists."
+        echo ""
+
+        # Check for uncommitted code before allowing switch
+        check_uncommitted_code
+
+        echo "Loading existing configuration..."
+
+        # Extract this project's config and write to project.json
+        jq ".projects[\"$PROJECT_NAME\"]" "$CONFIG_FILE" > project.json
+
+        echo ""
+        echo "✓ Configuration loaded for: $PROJECT_NAME"
+        echo ""
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "  OPENING CLAUDE CODE..."
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo ""
+
+        # Try to copy /install command to clipboard
+        if command -v pbcopy &> /dev/null; then
+            echo "/install" | pbcopy
+            echo "✓ Command '/install' copied to clipboard (paste in Claude Code)"
+        elif command -v xclip &> /dev/null; then
+            echo "/install" | xclip -selection clipboard
+            echo "✓ Command '/install' copied to clipboard (paste in Claude Code)"
+        elif command -v clip &> /dev/null; then
+            echo "/install" | clip
+            echo "✓ Command '/install' copied to clipboard (paste in Claude Code)"
+        fi
+
+        echo ""
+        echo "Once Claude Code opens, run: /install"
+        echo ""
+        echo "This will switch to the '$PROJECT_NAME' configuration."
+        echo ""
+        exit 0
+    fi
+fi
 PROJECT_DESCRIPTION=$(prompt_with_default "Project description" "")
 PROJECT_TYPE=$(prompt_with_default "Project type (web-app/api/mobile/library/other)" "web-app")
 
@@ -90,8 +177,8 @@ echo "  GENERATING CONFIGURATION..."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-# Generate project.json
-cat > project.json << EOF
+# Create project configuration JSON
+PROJECT_CONFIG=$(cat << EOF
 {
   "project_name": "$PROJECT_NAME",
   "project_description": "$PROJECT_DESCRIPTION",
@@ -102,8 +189,38 @@ cat > project.json << EOF
   "installation_date": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 }
 EOF
+)
+
+# Save to project.json (temporary, for /install command)
+echo "$PROJECT_CONFIG" > project.json
+
+# Update or create the master config file
+mkdir -p "$(dirname "$CONFIG_FILE")"
+
+if [ -f "$CONFIG_FILE" ]; then
+    # Config file exists - add/update this project
+    if command -v jq &> /dev/null; then
+        # Use jq to merge
+        TEMP_FILE=$(mktemp)
+        jq ".projects[\"$PROJECT_NAME\"] = $PROJECT_CONFIG" "$CONFIG_FILE" > "$TEMP_FILE"
+        mv "$TEMP_FILE" "$CONFIG_FILE"
+    else
+        echo "Warning: jq not found. Cannot update existing config file."
+        echo "Please install jq or manually update $CONFIG_FILE"
+    fi
+else
+    # Create new config file
+    cat > "$CONFIG_FILE" << EOF
+{
+  "projects": {
+    "$PROJECT_NAME": $PROJECT_CONFIG
+  }
+}
+EOF
+fi
 
 echo "✓ Configuration saved to project.json"
+echo "✓ Configuration stored in $CONFIG_FILE"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  OPENING CLAUDE CODE..."

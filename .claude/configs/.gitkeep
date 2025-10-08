@@ -1,0 +1,16 @@
+# Project Configurations
+#
+# This directory stores a single config file: projects.json
+#
+# Structure:
+# {
+#   "projects": {
+#     "ProjectName": { ...project config... },
+#     "AnotherProject": { ...project config... }
+#   }
+# }
+#
+# To switch projects:
+# 1. Run ./install.sh with the project name
+# 2. If project exists, it loads that config (no new prompts)
+# 3. Config switching blocked if any repository has uncommitted changes
