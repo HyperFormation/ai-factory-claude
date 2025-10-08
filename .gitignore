@@ -59,9 +59,13 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
-# Optional: Uncomment if repositories should be managed separately
-# repositories/*/
-# !repositories/README.md
+# Repositories should be managed separately
+repositories/*/
+!repositories/README.md
+
+# PRDs should be managed separately
+PRDs/*/
+!PRDs/README.md
 
 # Temporary files
 tmp/
@@ -78,3 +82,5 @@ temp/
 docs/_build/
 site/
 
+repositories/
+.claude/settings.local.json
