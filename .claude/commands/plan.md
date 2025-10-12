@@ -12,6 +12,15 @@ Generate implementation plan and task breakdown from a PRD.
 
 Example: `/plan PRD-001`
 
+### Create Plan with Specific Task Count
+
+```
+/plan PRD-{number} {count}
+```
+
+Example: `/plan PRD-001 4` will create 4 tasks.
+Example: `/plan PRD-001 5` will create 5 tasks.
+
 ### Create Detailed Task Plans
 
 ```
@@ -113,6 +122,7 @@ Each task in `tasks.json`:
 
 ## Tips
 
+- Inspect existing code relevant to the PRD to understand the project and determine how to break down the PRD into tasks.
 - Run overall plan first to see all tasks
 - Review task breakdown before detailing individual tasks
 - Consider dependencies when planning task order

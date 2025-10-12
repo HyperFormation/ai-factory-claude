@@ -41,7 +41,7 @@ Implement functionality specified in task plans, following coding standards, han
   - Design patterns to use
   - Technology stack specifics
   - Performance requirements
-- Review existing codebase patterns in `repositories/`
+- Review existing codebase patterns in `repositories/`, especially if repositories/{project} contains .claude or .cursor files with project specific rules, guardrails and conventions.
 - Identify reusable components or utilities
 
 ### 3. Plan Implementation
@@ -206,6 +206,15 @@ Before considering code complete, verify:
 - Write docstrings for functions/classes
 - Use context managers appropriately
 - Prefer list comprehensions when readable
+
+### PHP
+
+- Follow PSR-12 style guide
+- Use type hints
+- Use return types
+- Use context managers appropriately
+- Use dependency injection to keep code decoupled and testable
+- Use namespaces to organize code
 
 ### General
 

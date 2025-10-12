@@ -60,7 +60,7 @@ Generated content includes:
 
 ### `.claude/project/architecture.md`
 
-Generated content includes:
+Generated content includes the following which should be fetched by reviewing the actual code in the project's repository:
 - Project type and context
 - Repository structure
 - File organization conventions
@@ -125,11 +125,6 @@ Console Output:
   AI FACTORY INSTALLATION COMPLETE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Project: Your Project Name
-Type: web-app
-Repositories: 1
-Phase: initialization
-
 The AI Factory is now configured for your project!
 
 Next Steps:
@@ -177,8 +172,7 @@ ls project.json  # Should not exist
 
 ## Agents Involved
 
-- **System/Claude**: Reads configuration and updates files
-- **Git Manager**: Can be invoked to commit the initialized configuration
+- **System/Claude**: Reads configuration and repository code files and updates files
 
 ## Re-installation
 
@@ -199,25 +193,6 @@ Before installation, the AI Factory contains template/example content in `.claud
 - PRD structure
 - Repository organization
 
-## Multi-Project Usage
-
-For managing multiple projects:
-
-### Option 1: Separate AI Factory per Project
-- Clone AI Factory to each project directory
-- Run installation in each project
-- Each has its own PRDs and configuration
-
-### Option 2: Single AI Factory, Multiple Repos
-- Single AI Factory installation
-- Multiple repositories in `repositories/` folder
-- Shared PRDs across repositories
-- Common standards and practices
-
-### Option 3: Separate Branches
-- Use git branches for different projects
-- Each branch configured for a specific project
-- Switch branches to switch contexts
 
 ## Best Practices
 

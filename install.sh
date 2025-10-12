@@ -118,6 +118,23 @@ if [ -f "$CONFIG_FILE" ]; then
         echo ""
         echo "✓ Configuration loaded for: $PROJECT_NAME"
 
+        # Remove all existing symlinks and recreate from config
+        echo ""
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "  CLEANING REPOSITORY SYMLINKS..."
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo ""
+
+        # Remove all existing symlinks in repositories directory
+        if [ -d "$REPO_DIR" ]; then
+            for item in "$REPO_DIR"/*; do
+                if [ -L "$item" ]; then
+                    rm "$item"
+                    echo "Removed symlink: $(basename "$item")"
+                fi
+            done
+        fi
+
         # Create symlinks from loaded config
         SYMLINKS_TO_CREATE=false
 
@@ -129,13 +146,18 @@ if [ -f "$CONFIG_FILE" ]; then
                     break
                 fi
             done < <(jq -r '.repositories as $repos | .repository_symlinks as $links | range(0; $repos | length) | "\($repos[.])	\($links[.])"' project.json)
+        elif grep -q '"repository_symlinks"' project.json 2>/dev/null && ! grep -q '"repository_symlinks": \[null\]' project.json; then
+            echo ""
+            echo "ERROR: jq is required to create symlinks from config"
+            echo "Install jq:"
+            echo "  macOS:  brew install jq"
+            echo "  Linux:  apt-get install jq (Ubuntu/Debian) or yum install jq (RHEL/CentOS)"
+            exit 1
         fi
 
         if [ "$SYMLINKS_TO_CREATE" = true ]; then
             echo ""
-            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-            echo "  CREATING SYMLINKS..."
-            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "Creating symlinks for '$PROJECT_NAME'..."
             echo ""
 
             mkdir -p "$REPO_DIR"
@@ -144,11 +166,8 @@ if [ -f "$CONFIG_FILE" ]; then
                 if [ "$symlink_target" != "null" ] && [ -n "$symlink_target" ]; then
                     symlink_path="$REPO_DIR/$repo_name"
 
-                    # Remove existing symlink if it exists
-                    if [ -L "$symlink_path" ]; then
-                        rm "$symlink_path"
-                        echo "Removed existing symlink: $symlink_path"
-                    elif [ -d "$symlink_path" ]; then
+                    # Check if a directory exists at this location
+                    if [ -d "$symlink_path" ] && [ ! -L "$symlink_path" ]; then
                         echo "Warning: Directory already exists at $symlink_path (not overwriting)"
                         continue
                     fi
@@ -161,6 +180,8 @@ if [ -f "$CONFIG_FILE" ]; then
                     fi
                 fi
             done < <(jq -r '.repositories as $repos | .repository_symlinks as $links | range(0; $repos | length) | "\($repos[.])	\($links[.])"' project.json)
+        else
+            echo "No symlinks to create for this project."
         fi
 
         echo ""
@@ -221,16 +242,29 @@ if [ "$IS_MULTI_REPO" = "true" ]; then
 
         if [ "$repo_option" = "2" ]; then
             read -p "Path to existing repository: " symlink_path
-            # Expand tilde and make absolute
+            # Expand tilde
             symlink_path="${symlink_path/#\~/$HOME}"
-            symlink_path=$(cd "$(dirname "$symlink_path")" 2>/dev/null && pwd)/$(basename "$symlink_path") || symlink_path="$symlink_path"
 
-            if [ ! -d "$symlink_path" ]; then
-                echo "Warning: Path '$symlink_path' does not exist. Symlink will be created anyway."
+            # Validate and convert to absolute path
+            if [ -d "$symlink_path" ]; then
+                symlink_path=$(cd "$symlink_path" && pwd)
+                REPOS+=("$repo_name")
+                REPO_SYMLINKS+=("$symlink_path")
+            else
+                echo "ERROR: Path '$symlink_path' does not exist."
+                read -p "Use this path anyway? [y/N]: " force_path
+                if [[ "$force_path" =~ ^[Yy] ]]; then
+                    # Try to make it absolute even if it doesn't exist
+                    symlink_path=$(cd "$(dirname "$symlink_path")" 2>/dev/null && pwd)/$(basename "$symlink_path") || symlink_path="$symlink_path"
+                    REPOS+=("$repo_name")
+                    REPO_SYMLINKS+=("$symlink_path")
+                    echo "Warning: Storing non-existent path. Symlink creation may fail."
+                else
+                    echo "Skipping symlink for '$repo_name' (will use manual clone mode)"
+                    REPOS+=("$repo_name")
+                    REPO_SYMLINKS+=("")
+                fi
             fi
-
-            REPOS+=("$repo_name")
-            REPO_SYMLINKS+=("$symlink_path")
         else
             REPOS+=("$repo_name")
             REPO_SYMLINKS+=("")
@@ -247,16 +281,29 @@ else
 
     if [ "$repo_option" = "2" ]; then
         read -p "Path to existing repository: " symlink_path
-        # Expand tilde and make absolute
+        # Expand tilde
         symlink_path="${symlink_path/#\~/$HOME}"
-        symlink_path=$(cd "$(dirname "$symlink_path")" 2>/dev/null && pwd)/$(basename "$symlink_path") || symlink_path="$symlink_path"
 
-        if [ ! -d "$symlink_path" ]; then
-            echo "Warning: Path '$symlink_path' does not exist. Symlink will be created anyway."
+        # Validate and convert to absolute path
+        if [ -d "$symlink_path" ]; then
+            symlink_path=$(cd "$symlink_path" && pwd)
+            REPOS=("$SINGLE_REPO")
+            REPO_SYMLINKS=("$symlink_path")
+        else
+            echo "ERROR: Path '$symlink_path' does not exist."
+            read -p "Use this path anyway? [y/N]: " force_path
+            if [[ "$force_path" =~ ^[Yy] ]]; then
+                # Try to make it absolute even if it doesn't exist
+                symlink_path=$(cd "$(dirname "$symlink_path")" 2>/dev/null && pwd)/$(basename "$symlink_path") || symlink_path="$symlink_path"
+                REPOS=("$SINGLE_REPO")
+                REPO_SYMLINKS=("$symlink_path")
+                echo "Warning: Storing non-existent path. Symlink creation may fail."
+            else
+                echo "Skipping symlink for '$SINGLE_REPO' (will use manual clone mode)"
+                REPOS=("$SINGLE_REPO")
+                REPO_SYMLINKS=("")
+            fi
         fi
-
-        REPOS=("$SINGLE_REPO")
-        REPO_SYMLINKS=("$symlink_path")
     else
         REPOS=("$SINGLE_REPO")
         REPO_SYMLINKS=("")
@@ -351,11 +398,13 @@ for i in "${!REPOS[@]}"; do
         symlink_target="${REPO_SYMLINKS[$i]}"
         symlink_path="$REPO_DIR/$repo_name"
 
-        # Remove existing symlink or directory if it exists
+        # Remove existing symlink if it exists
         if [ -L "$symlink_path" ]; then
             rm "$symlink_path"
-            echo "Removed existing symlink: $symlink_path"
-        elif [ -d "$symlink_path" ]; then
+        fi
+
+        # Check if a directory exists at this location
+        if [ -d "$symlink_path" ]; then
             echo "Warning: Directory already exists at $symlink_path (not overwriting)"
             continue
         fi

@@ -17,7 +17,7 @@ This command orchestrates multiple agents to implement, test, and verify a task:
 ### 1. Initialize (Git Manager)
 
 - Creates branch: `prd-{number}/task-{number}`
-- Updates task status to `in_progress`
+- Updates task status to `in_progress` in `.claude/project/status.json`
 - Records start time
 
 ### 2. Implementation Loop
