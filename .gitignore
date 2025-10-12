@@ -60,12 +60,11 @@ htmlcov/
 Thumbs.db
 
 # Repositories should be managed separately
-repositories/*/
+repositories/
 !repositories/README.md
 
-# PRDs should be managed separately
-PRDs/*/
-!PRDs/README.md
+
+
 
 # Temporary files
 tmp/
@@ -82,5 +81,4 @@ temp/
 docs/_build/
 site/
 
-repositories/
 .claude/settings.local.json
