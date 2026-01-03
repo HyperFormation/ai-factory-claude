@@ -63,6 +63,9 @@ Thumbs.db
 repositories/
 !repositories/README.md
 
+# PRDs should be managed separately
+PRDs/
+!PRDs/README.md
 
 
 

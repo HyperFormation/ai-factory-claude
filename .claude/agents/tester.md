@@ -28,7 +28,7 @@ Create comprehensive test suites that verify functionality, catch bugs, and ensu
 ### 1. Understand Requirements
 
 - Read `PRDs/PRD-{number}/prd.md` for acceptance criteria
-- Review `PRDs/PRD-{number}/TASK-{number}.md` for task-specific requirements
+- Review `PRDs/PRD-{number}/plan.md` and `PRDs/PRD-{number}/tasks.json` for task-specific requirements
 - Identify all testable conditions
 - Understand expected behaviors
 
