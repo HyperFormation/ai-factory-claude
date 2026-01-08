@@ -27,23 +27,29 @@ Manage all version control operations, track task and PRD progress, and maintain
 
 ### Branch Management
 
-#### 1. Create Task Branch
+#### 1. Create/Checkout PRD Branch
 
 When a task begins (via `/build` command):
 
 ```bash
-git checkout -b prd-{number}/task-{number}
+# First task for a PRD - create the branch:
+git checkout -b prd-{number}
+
+# Subsequent tasks - branch already exists:
+git checkout prd-{number}
 ```
 
-Example: `git checkout -b prd-001/task-003`
+Example: 
+- First task: `git checkout -b prd-001`
+- Later tasks: `git checkout prd-001`
 
+- Check if branch exists before creating (avoid errors on subsequent tasks)
 - Ensure branch created from appropriate base branch (usually `main`)
-- Tag branch with parent PRD in description
 - Update `PRDs/PRD-{number}/tasks.json` with branch name
 
 #### 2. Track Branch Status
 
-- Monitor commits to task branches
+- Monitor commits to PRD branch
 - Record commit hashes and messages in tasks.json
 - Keep branch up-to-date with base branch if needed
 - Manage merge conflicts if they arise
@@ -67,11 +73,11 @@ Update `PRDs/PRD-{number}/tasks.json`:
   "task_id": "TASK-001",
   "description": "Task description",
   "status": "in_progress",
-  "branch": "prd-001/task-001",
+  "branch": "prd-001",
   "commits": [
     {
       "hash": "abc123def",
-      "message": "Implemented feature X",
+      "message": "[TASK-001] Implemented feature X",
       "date": "2025-10-04T14:30:00Z",
       "author": "Claude Code"
     }
@@ -146,13 +152,14 @@ Create progress reports:
 
 ## PRD-001: User Authentication
 - **Status**: In Progress (60% complete)
+- **Branch**: prd-001
 - **Completed Tasks**: 3 of 5
   - ✓ TASK-001: Setup auth infrastructure
   - ✓ TASK-002: Implement login
   - ✓ TASK-003: Add registration
 - **In Progress**: TASK-004: Password reset
 - **Pending**: TASK-005: Session management
-- **Commits**: 15 commits, 450 lines added
+- **Commits**: 5 commits (one per task + fixes)
 
 ## PRD-002: Dashboard
 - **Status**: Planning
@@ -184,10 +191,22 @@ Create progress reports:
 
 #### 8. Commit Best Practices
 
-Ensure commits follow standards:
+Each task gets exactly **one commit** with a clear message:
 
 ```bash
-# Good commit message format
+# Commit format for tasks
+git commit -m "[TASK-001] Implement user login endpoint"
+```
+
+**Commit Message Format**:
+- Format: `[TASK-XXX] Brief summary` (50 chars max)
+- One commit per task
+- All changes for a task go into a single commit
+- Reference the task ID clearly
+
+For larger tasks, the commit message can include details:
+
+```bash
 git commit -m "[TASK-001] Implement user login endpoint
 
 - Add POST /api/auth/login route
@@ -196,45 +215,40 @@ git commit -m "[TASK-001] Implement user login endpoint
 - Include error handling for invalid credentials"
 ```
 
-**Commit Message Format**:
-- First line: `[TASK-XXX] Brief summary` (50 chars)
-- Blank line
-- Detailed description (72 chars per line)
-- Reference related issues or PRD sections
-
 ## Responsibilities
 
 ### On Task Start
 - [ ] Check if branch `prd-{number}` exists
-- [ ] Create branch if first task, otherwise checkout existing. Always branch off the "release" branch when creating a new branch for the current prd.
+- [ ] Create branch if first task, otherwise checkout existing. Always branch off the "release" branch when creating a new branch for the current PRD.
 - [ ] Update task status to `in_progress`
 - [ ] Set task `started` timestamp
 - [ ] Update project `active_tasks`
 
 ### During Development
-- [ ] Record all commits in tasks.json
 - [ ] Monitor progress
 - [ ] Track blockers
 - [ ] Keep status.json current
 
 ### On Task Completion
 - [ ] Verify all tests pass (from Tester)
+- [ ] Create single commit: `[TASK-XXX] Description`
+- [ ] Record commit in tasks.json
 - [ ] Update task status to `completed`
 - [ ] Set task `completed` timestamp
 - [ ] Remove from `active_tasks`
 - [ ] Increment `completed_tasks` counter
 - [ ] Add entry to `recent_changes`
-- [ ] Consider merging branch (or keep for tracking)
 
 ### On PRD Completion
 - [ ] Verify all tasks completed
 - [ ] Move PRD from `active_prds` to `completed_prds`
 - [ ] Generate completion summary
 - [ ] Update project phase if needed
+- [ ] Consider merging branch to main
 
 ## Output
 
-- Git branches following naming convention
+- Git branches following naming convention: `prd-{number}`
 - Updated `PRDs/PRD-{number}/tasks.json`
 - Updated `.claude/project/status.json`
 - Progress reports and summaries
@@ -250,17 +264,16 @@ git commit -m "[TASK-001] Implement user login endpoint
 ## Best Practices
 
 ### Branch Management
-- Use consistent naming: `prd-{number}/task-{number}`
-- Keep branches focused on single tasks
-- Don't mix work from multiple tasks
+- Use consistent naming: `prd-{number}` (one branch per PRD)
+- All tasks for a PRD go on the same branch
+- Each task is a single commit on the branch
 - Clean up merged branches periodically
 
 ### Commit Discipline
-- Commit frequently (not just at task end)
-- Each commit is a logical unit of work
-- Write clear, descriptive commit messages
-- Reference task IDs in all commits
+- **One commit per task** - all task work in a single commit
+- Write clear commit messages: `[TASK-XXX] Description`
 - Don't commit broken code
+- Reference task IDs in all commits
 
 ### Status Accuracy
 - Update status immediately when changes occur
@@ -285,16 +298,23 @@ git commit -m "[TASK-001] Implement user login endpoint
 - Missing dependencies
 - Stale branch information
 - Incorrect statistics
-- Not recording all commits
-- Mixing commits from multiple tasks
+- Creating multiple commits per task
+- Creating separate branches per task (use one branch per PRD)
 
 ## Git Commands Reference
 
 ```bash
-# Create branch
-git checkout -b prd-001/task-001
+# Check if branch exists
+git branch --list prd-001
 
-# Commit with message
+# Create PRD branch (first task only if not already created)
+git checkout -b prd-001
+
+# Checkout existing PRD branch (subsequent tasks) if not already on that branch
+git checkout prd-001
+
+
+# Commit task work
 git commit -m "[TASK-001] Description"
 
 # View log for task
@@ -312,9 +332,6 @@ git branch -a
 # View commit details
 git show <commit-hash>
 
-# Merge task branch (when ready)
-git checkout main
-git merge prd-001/task-001
 ```
 
 ## Status Transitions
@@ -331,12 +348,22 @@ created → planning → in_progress → testing → completed
                       blocked
 ```
 
+## Branch/Commit Strategy
+
+```
+main
+  └── prd-001 (branch)
+        ├── [TASK-001] Setup project structure
+        ├── [TASK-002] Implement core functionality  
+        ├── [TASK-003] Add user interface
+        └── [TASK-004] Write tests
+```
+
 ## Metrics to Track
 
 - Total PRDs: created, active, completed
 - Total Tasks: created, in progress, completed, blocked
 - Velocity: tasks completed per week
-- Commit frequency
+- Commits per PRD
 - Time per task (started to completed)
 - Blocker frequency and resolution time
-

@@ -16,8 +16,9 @@ This command orchestrates multiple agents to implement, test, and verify a task:
 
 ### 1. Initialize (Git Manager)
 
-- Creates branch: `prd-{number}/task-{number}`
-- Updates task status to `in_progress` in `.claude/project/status.json`
+- **First task**: Creates branch `prd-{number}` from main
+- **Subsequent tasks**: Continues on existing `prd-{number}` branch
+- Updates task status to `in_progress` in tasks.json
 - Records start time
 
 ### 2. Implementation Loop
@@ -26,9 +27,9 @@ Repeats until all tests pass:
 
 #### Code (Coder + Designer)
 
-- **Coder** implements functionality per task plan
+- **Coder** implements functionality per plan.md and tasks.json
 - **Designer** ensures UI consistency (if UI work)
-- Code committed to task branch
+- Code committed to PRD branch
 
 #### Test (Tester)
 
@@ -48,7 +49,7 @@ Repeats until all tests pass:
 - Updates task status to `completed`
 - Records completion time
 - Updates project statistics
-- Documents all commits
+- Documents the commit
 
 ## Output
 
@@ -62,20 +63,19 @@ Updates:
 - `.claude/project/status.json` - Project progress
 
 Git:
-- Branch: `prd-{number}/task-{number}`
-- Multiple commits tagged with task ID
+- Branch: `prd-{number}` (one branch per PRD)
+- Each task produces one standalone commit: `[TASK-XXX] Description`
 
 ## Console Output Example
 
 ```
 ✓ Starting build for PRD-001 TASK-003
-✓ Created branch: prd-001/task-003
+✓ Branch prd-001 exists, checking out
 ✓ Task status: in_progress
 
 [Implementation]
   ✓ Coder: Implemented user registration endpoint
   ✓ Designer: Updated registration form styling
-  ✓ Committed 3 changes
 
 [Testing]
   ✓ Tester: Created 12 unit tests
@@ -86,7 +86,6 @@ Git:
 [Fix Iteration]
   ✓ Coder: Fixed validation issue
   ✓ Coder: Fixed email format check
-  ✓ Committed fixes
 
 [Re-testing]
   ✓ Running tests...
@@ -94,13 +93,14 @@ Git:
   ✓ All acceptance criteria verified
 
 [Completion]
+  ✓ Committed: [TASK-003] Add user registration
   ✓ Task marked complete
   ✓ Updated status tracking
 
 Summary:
   Files changed: 5
   Tests added: 15
-  Commits: 5
+  Commit: [TASK-003] Add user registration
   Status: COMPLETED ✓
 ```
 
@@ -109,7 +109,7 @@ Summary:
 After completing a task:
 
 ```
-/build PRD-XXX TASK-{next}    # Build next task
+/build PRD-XXX TASK-{next}    # Build next task on same branch
 ```
 
 Check task list to see what's next:
@@ -118,7 +118,7 @@ Check task list to see what's next:
 
 ## Agents Involved
 
-- **Git Manager**: Branch creation, status updates
+- **Git Manager**: Branch management, status updates
 - **Coder**: Implementation
 - **Designer**: UI consistency and design
 - **Tester**: Test creation and execution
@@ -156,6 +156,5 @@ Task is marked complete when:
 - Build tasks in dependency order
 - One task at a time
 - Review test results carefully
-- Ensure task plan is detailed before building
+- Check `PRDs/PRD-XXX/plan.md` for implementation guidance
 - Check `.claude/project/architecture.md` for standards
-

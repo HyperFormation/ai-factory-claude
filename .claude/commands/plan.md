@@ -4,8 +4,6 @@ Generate implementation plan and task breakdown from a PRD.
 
 ## Usage
 
-### Create Overall Plan
-
 ```
 /plan PRD-{number}
 ```
@@ -21,23 +19,7 @@ Example: `/plan PRD-001`
 Example: `/plan PRD-001 4` will create 4 tasks.
 Example: `/plan PRD-001 5` will create 5 tasks.
 
-### Create Detailed Task Plans
-
-```
-/plan PRD-{number} TASK-{number}
-```
-
-Example: `/plan PRD-001 TASK-003`
-
-### Plan All Tasks at Once
-
-```
-/plan PRD-{number} --all-tasks
-```
-
 ## What This Command Does
-
-### Phase 1: Overall Plan (`/plan PRD-XXX`)
 
 1. **Reads the PRD** and understands requirements
 2. **Analyzes** project architecture and existing code
@@ -47,20 +29,7 @@ Example: `/plan PRD-001 TASK-003`
    - `PRDs/PRD-XXX/plan.md` - Overall implementation strategy
    - `PRDs/PRD-XXX/tasks.json` - Task tracking with metadata
 
-### Phase 2: Task Plans (`/plan PRD-XXX TASK-XXX`)
-
-1. **Reads** overall plan and specific task
-2. **Creates detailed implementation plan** including:
-   - Exact files to create/modify
-   - Technical approach and patterns
-   - Required dependencies
-   - Testing strategy
-   - Acceptance criteria mapping
-3. **Generates**: `PRDs/PRD-XXX/TASK-{number}.md`
-
 ## Output
-
-### After Phase 1
 
 Creates:
 - `PRDs/PRD-XXX/plan.md` - High-level implementation plan
@@ -79,21 +48,9 @@ Tasks Overview:
   TASK-005: [Low] Documentation
 ```
 
-### After Phase 2
-
-Creates:
-- `PRDs/PRD-XXX/TASK-{number}.md` - Detailed task implementation plan
-
 ## Next Steps
 
-After creating overall plan:
-```
-/plan PRD-XXX --all-tasks     # Plan all tasks
-# or
-/plan PRD-XXX TASK-001        # Plan one task
-```
-
-After creating task plans:
+After creating the plan:
 ```
 /build PRD-XXX TASK-001       # Start implementation
 ```
@@ -123,9 +80,7 @@ Each task in `tasks.json`:
 ## Tips
 
 - Inspect existing code relevant to the PRD to understand the project and determine how to break down the PRD into tasks.
-- Run overall plan first to see all tasks
-- Review task breakdown before detailing individual tasks
+- Review task breakdown before starting implementation
 - Consider dependencies when planning task order
 - Each task should be independently testable
 - Task scope should be reasonable (not too large or small)
-

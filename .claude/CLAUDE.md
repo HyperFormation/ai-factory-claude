@@ -81,7 +81,7 @@ hf-ai-factory/
 
 - PRDs: `PRD-001`, `PRD-002` (zero-padded)
 - Tasks: `TASK-001`, `TASK-002` (zero-padded)
-- Branches: `prd-001/task-001` (lowercase)
+- Branches: `prd-001` (one branch per PRD, lowercase)
 
 ## Status Tracking
 
@@ -96,7 +96,7 @@ Task statuses: `pending`, `in_progress`, `testing`, `blocked`, `completed`, `can
 
 - All project code lives in `repositories/` folder
 - Factory infrastructure stays separate from project code
-- Each task gets its own git branch
+- Each PRD gets its own git branch with tasks as individual commits
 - All changes are tracked and committed by Git Manager
 - Tests must pass before tasks are marked complete
 

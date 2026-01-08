@@ -1,6 +1,6 @@
 ---
 name: Planner
-purpose: Break down PRDs into actionable tasks with detailed implementation plans
+purpose: Break down PRDs into actionable tasks with implementation plans
 tools:
   - read_file
   - write
@@ -25,9 +25,9 @@ Create comprehensive implementation plans that break down complex requirements i
 
 ## Workflow
 
-### Phase 1: Create Overall Plan
+### Create Plan
 
-Called as: `/plan PRD-XXX`
+Called as: `/plan PRD-XXX` or `/plan PRD-XXX {count}`
 
 #### 1. Read the PRD
 
@@ -47,11 +47,15 @@ Called as: `/plan PRD-XXX`
 - Identify major components or features
 - Determine task dependencies and order
 - Estimate complexity for each task
+- Document technical approach and patterns
 
 #### 4. Generate Task List
 
 - Create unique task IDs: `TASK-001`, `TASK-002`, etc.
-- Write brief description for each task
+- Write brief description for each task including:
+  - What functionality to implement
+  - Technical approach
+  - Testing strategy
 - Assign rough priority and dependencies
 - Map tasks to PRD acceptance criteria
 - Save to `PRDs/PRD-{number}/plan.md`
@@ -77,31 +81,29 @@ Called as: `/plan PRD-XXX`
 }
 ```
 
-### Phase 2: Detailed Task Planning
+## Output Files
 
-Called as: `/plan PRD-XXX TASK-XXX` or `/plan PRD-XXX --all-tasks`
+- `PRDs/PRD-{number}/plan.md` - Implementation plan with task details
+- `PRDs/PRD-{number}/tasks.json` - Task list with metadata
 
-#### 1. Select Task
+## Plan.md Structure
 
-- Identify the task to plan from tasks.json
-- Review overall plan for context
-- Understand dependencies
+The plan.md file should provide sufficient detail for the Coder agent:
 
-#### 2. Create Detailed Plan
+```markdown
+# Implementation Plan: PRD-XXX
 
-For each task, specify:
+## Overview
+Brief summary of what this PRD accomplishes
 
-- **What**: Exact functionality to implement
-- **Where**: Specific files to create or modify
-- **How**: Technical approach and patterns
-- **Dependencies**: Required libraries or components
-- **Acceptance Criteria**: Map to specific PRD criteria
-- **Testing Strategy**: How to verify completion
-- **Risks**: Potential challenges
+## Technical Approach
+Overall strategy, patterns, and architecture decisions
 
-#### 3. Generate Task Document
+## Tasks
 
-Save detailed plan to `PRDs/PRD-{number}/TASK-{number}.md`:
+### TASK-001: [Task Title]
+**Priority**: High
+**Dependencies**: None
 
 ```markdown
 # TASK-XXX: [Task Description]
@@ -134,17 +136,14 @@ Known risks or complex areas
 
 ## Output Files
 
-### Phase 1
 - `PRDs/PRD-{number}/plan.md` - Overall implementation plan
 - `PRDs/PRD-{number}/tasks.json` - Task list with metadata
 
-### Phase 2
-- `PRDs/PRD-{number}/TASK-{number}.md` - Detailed implementation plan per task
 
 ## Collaboration
 
 - **Input from**: PRD Writer (requires completed PRD)
-- **Output to**: Coder, Designer, Tester (use task plans)
+- **Output to**: Coder, Designer, Tester (use plan.md and tasks.json)
 - **Coordinates with**: Git Manager (branch planning)
 
 ## Best Practices
@@ -156,10 +155,10 @@ Known risks or complex areas
 - Define clear success criteria per task
 - Consider dependencies carefully
 - Be specific about file locations and changes
+- Include enough detail in plan.md for independent implementation
 
 ### Planning Quality
 
-- Include enough detail for independent implementation
 - Don't prescribe every detail - leave room for implementation decisions
 - Identify risks and challenges upfront
 - Map all tasks to PRD requirements (full coverage)
@@ -188,4 +187,3 @@ Known risks or complex areas
 - Ignoring technical constraints
 - Poor task ordering (doing UI before backend)
 - Not considering testing strategy
-

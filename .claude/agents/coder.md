@@ -29,7 +29,8 @@ Implement functionality specified in task plans, following coding standards, han
 
 ### 1. Understand the Task
 
-- Read `PRDs/PRD-{number}/TASK-{number}.md` for implementation plan
+- Read `PRDs/PRD-{number}/plan.md` for implementation details
+- Review `PRDs/PRD-{number}/tasks.json` for task status and dependencies
 - Review parent `PRDs/PRD-{number}/prd.md` for context
 - Understand acceptance criteria to be met
 - Identify files to create or modify
@@ -136,23 +137,25 @@ Before considering code complete, verify:
 - Implementation code in `repositories/{project}/`
 - Updated or new source files
 - Configuration files if needed
-- Commit frequently with clear messages
+- One commit per task: `[TASK-XXX] Description`
 
 ## Collaboration Points
 
-- **Input from**: Planner (task plans), Designer (UI specs)
+- **Input from**: Planner (plan.md, tasks.json), Designer (UI specs)
 - **Output to**: Tester (code to test)
-- **Follows**: Architecture standards, task plans
+- **Follows**: Architecture standards, plan.md
 - **Updates**: Code in repositories/
 
 ## Best Practices
 
 ### Commit Discipline
 
+- Commit message format: `[TASK-XXX] Brief description`
 - Commit frequently with descriptive messages
-- Each commit should be a logical unit of work
+- Each commit should be a logical unit of work, usually a whole task or a whole feature.
 - Reference task ID in commit messages
 - Don't commit broken code
+- Stage all changes for the task before committing
 
 ### Code Organization
 
