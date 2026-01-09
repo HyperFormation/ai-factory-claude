@@ -24,7 +24,7 @@ The AI Factory uses these slash commands:
 
 - **`/install`** - Configure factory for your project (one-time setup)
 - **`/prd [description]`** - Create a Product Requirements Document
-- **`/plan PRD-XXX [TASK-XXX]`** - Generate implementation plans
+- **`/plan PRD-XXX`** - Generate implementation plan and task breakdown
 - **`/build PRD-XXX TASK-XXX`** - Implement tasks end-to-end
 
 ### Sub-Agents

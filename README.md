@@ -58,11 +58,7 @@ Break the PRD into tasks:
 /plan PRD-XXX
 ```
 
-This creates an overall plan and task list. Then create detailed plans for each task:
-
-```
-/plan PRD-XXX --all-tasks
-```
+This creates an overall plan and task list in `PRDs/PRD-XXX/plan.md` and `tasks.json`.
 
 ### 3. Build Tasks
 
@@ -102,9 +98,8 @@ This coordinates Coder, Designer, and Tester agents to implement, test, and veri
 ├── PRDs/
 │   ├── PRD-001/
 │   │   ├── prd.md              # Product requirements
-│   │   ├── plan.md             # Implementation plan
-│   │   ├── tasks.json          # Task tracking
-│   │   └── TASK-001.md         # Detailed task plans
+│   │   ├── plan.md             # Implementation plan (with task details)
+│   │   └── tasks.json          # Task tracking
 │   └── README.md
 │
 ├── repositories/
@@ -141,33 +136,21 @@ authentication, and pagination.
 - `PRDs/PRD-XXX/prd.md` with complete requirements
 - Initialized `tasks.json` file
 
-### `/plan PRD-XXX [TASK-XXX]`
+### `/plan PRD-XXX`
 
-Generates implementation plans from PRDs.
+Generates implementation plan and task breakdown from a PRD.
 
-**Phase 1 - Overall Plan:**
+**Usage:**
 ```
 /plan PRD-001
+/plan PRD-001 5    # Create 5 tasks
 ```
 
-Creates task breakdown and overall strategy.
-
-**Phase 2 - Task Plans:**
-```
-/plan PRD-001 TASK-003
-```
-
-Creates detailed implementation plan for specific task.
-
-**Plan All Tasks:**
-```
-/plan PRD-001 --all-tasks
-```
+Creates task breakdown and overall implementation strategy.
 
 **Output:**
-- `plan.md` with task breakdown
-- Populated `tasks.json` with all tasks
-- Individual `TASK-XXX.md` files with implementation details
+- `plan.md` with implementation strategy and task details
+- Populated `tasks.json` with all tasks and metadata
 
 ### `/build PRD-XXX TASK-XXX`
 
@@ -179,12 +162,13 @@ Implements a task end-to-end with automated testing.
 ```
 
 **Process:**
-1. Creates git branch: `prd-001/task-003`
+1. Creates/checks out git branch: `prd-001` (one branch per PRD)
 2. Coder implements functionality
 3. Designer ensures UI consistency
 4. Tester writes and runs tests
 5. Iterates until all tests pass and acceptance criteria met
-6. Updates status tracking
+6. Creates single commit: `[TASK-003] Description`
+7. Updates status tracking
 
 ## Sub-Agents
 
@@ -230,17 +214,12 @@ password reset, and session management.
 
 # Output: Created PRD-001
 
-# 2. Generate implementation plan
+# 2. Generate implementation plan and tasks
 /plan PRD-001
 
-# Output: Created 6 tasks
+# Output: Created plan.md with 6 tasks (TASK-001 through TASK-006)
 
-# 3. Plan all tasks
-/plan PRD-001 --all-tasks
-
-# Output: Detailed plans for TASK-001 through TASK-006
-
-# 4. Build each task
+# 3. Build each task (all on the same prd-001 branch)
 /build PRD-001 TASK-001  # Setup auth infrastructure
 /build PRD-001 TASK-002  # Implement login
 /build PRD-001 TASK-003  # Implement registration
@@ -263,11 +242,11 @@ Tracks task progress and git history:
       "task_id": "TASK-001",
       "description": "Setup authentication infrastructure",
       "status": "completed",
-      "branch": "prd-001/task-001",
+      "branch": "prd-001",
       "commits": [
         {
           "hash": "abc123",
-          "message": "Add JWT library and auth middleware",
+          "message": "[TASK-001] Setup authentication infrastructure",
           "date": "2025-10-04"
         }
       ],
@@ -319,9 +298,9 @@ Tracks overall project state:
 - Sequential numbering within each PRD
 
 ### Branches
-- Format: `prd-{number}/task-{number}` (e.g., prd-001/task-003)
-- One branch per task
-- Tagged with parent PRD
+- Format: `prd-{number}` (e.g., prd-001)
+- One branch per PRD
+- Each task is a single commit on the branch: `[TASK-XXX] Description`
 
 ## Best Practices
 
