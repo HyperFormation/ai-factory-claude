@@ -16,7 +16,7 @@ This command orchestrates multiple agents to implement, test, and verify a task:
 
 ### 1. Initialize (Git Manager)
 
-- **First task**: Creates branch `prd-{number}` from main
+- **First task**: Creates branch `prd-{number}` from `release`
 - **Subsequent tasks**: Continues on existing `prd-{number}` branch
 - Updates task status to `in_progress` in tasks.json
 - Records start time

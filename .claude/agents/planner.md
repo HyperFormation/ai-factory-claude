@@ -134,12 +134,6 @@ How to test this implementation
 Known risks or complex areas
 ```
 
-## Output Files
-
-- `PRDs/PRD-{number}/plan.md` - Overall implementation plan
-- `PRDs/PRD-{number}/tasks.json` - Task list with metadata
-
-
 ## Collaboration
 
 - **Input from**: PRD Writer (requires completed PRD)

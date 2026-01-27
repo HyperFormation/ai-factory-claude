@@ -219,7 +219,7 @@ git commit -m "[TASK-001] Implement user login endpoint
 
 ### On Task Start
 - [ ] Check if branch `prd-{number}` exists
-- [ ] Create branch if first task, otherwise checkout existing. Always branch off the "release" branch when creating a new branch for the current PRD.
+- [ ] Create branch if first task, otherwise checkout existing. Always branch off `release` when creating a new branch for the current PRD.
 - [ ] Update task status to `in_progress`
 - [ ] Set task `started` timestamp
 - [ ] Update project `active_tasks`

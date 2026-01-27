@@ -21,7 +21,7 @@ Or with optional scope:
 
 ## What This Command Does
 
-You are entering a **deliberate code cleanup workflow**. Using the **Code Cleanup Agent**, you will analyze the changes made on the current branch compared to `main`, then carefully evaluate each potential improvement before applying it.
+You are entering a **deliberate code cleanup workflow**. Using the **Code Cleanup Agent**, you will analyze the changes made on the current branch compared to `release`, then carefully evaluate each potential improvement before applying it.
 
 **CRITICAL MINDSET**:
 - **Think carefully** about every change before making it
@@ -89,14 +89,14 @@ First, understand what has changed:
 # Get current branch name
 git branch --show-current
 
-# List all changed files compared to main
-git diff main --name-only
+# List all changed files compared to release
+git diff release --name-only
 
 # Get summary of changes
-git diff main --stat
+git diff release --stat
 
 # Review the actual diff
-git diff main
+git diff release
 ```
 
 Create a mental inventory:

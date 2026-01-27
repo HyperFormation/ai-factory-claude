@@ -5,7 +5,7 @@
 ### Factory Infrastructure
 - **Agent Framework**: Claude Code sub-agents
 - **Configuration**: JSON and Markdown files
-- **Version Control**: Git with structured branching per task
+- **Version Control**: Git with structured branching per PRD
 
 ### Project Code
 - To be determined per project in the `repositories/` folder
@@ -27,7 +27,7 @@ repositories/     # Actual implementation code (gitignored if separate repos)
 
 - **PRDs**: `PRD-{number}` (e.g., PRD-001, PRD-002)
 - **Tasks**: `TASK-{number}` (e.g., TASK-001, TASK-002)
-- **Branches**: `prd-{number}/task-{number}` (e.g., prd-001/task-003)
+- **Branches**: `prd-{number}` (one branch per PRD, e.g., prd-001)
 
 ### Code Standards
 
@@ -38,10 +38,10 @@ repositories/     # Actual implementation code (gitignored if separate repos)
 
 ### Git Workflow
 
-1. Create feature branch for each task: `prd-{number}/task-{number}`
-2. Commit frequently with descriptive messages
-3. Link commits to task IDs
-4. Tag branches with their parent PRD
+1. Create feature branch for each PRD: `prd-{number}`
+2. Each task produces one commit: `[TASK-XXX] Description`
+3. Commit frequently with descriptive messages linked to task IDs
+4. All tasks for a PRD go on the same branch
 
 ## Design Principles
 
