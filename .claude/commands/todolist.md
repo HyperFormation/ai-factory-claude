@@ -46,10 +46,10 @@ Check the `PRD:` field:
 
 ### Phase 2: Planning
 
-Check if the PRD has a plan (tasks exist in `PRDs/{PRD-ID}/tasks.json`):
+Check if the PRD has a plan (the plan exist if there are both a `plan.md` and a `tasks.json` in `PRDs/{PRD-ID}`):
 
-- **If no tasks.json or empty**: Execute `/plan {PRD-ID}` to generate the plan
-- **If plan exists**: Skip to Phase 3
+- **If plan and tasks.json do not exist**: Execute `/plan {PRD-ID}` to generate the plan
+- **If plan and tasks.json exist**: Skip to Phase 3
 
 ### Phase 3: Build All Tasks
 
@@ -58,7 +58,7 @@ Get the list of tasks from `PRDs/{PRD-ID}/tasks.json`.
 For each task that is NOT `completed`:
 1. Execute `/build {PRD-ID} {TASK-ID}`
 2. If build fails or gets blocked:
-   - Update item `Status: Blocked`
+   - Update item in `claude-to-do-list.md` with `Status: Blocked`
    - Add `BlockedReason:` field explaining what failed
    - Move to the next pending item in the todo list
    - Do NOT stop the loop
@@ -67,10 +67,10 @@ For each task that is NOT `completed`:
 
 After all tasks for an item are completed:
 
-1. Check the checkbox: Change `- [ ]` to `- [x]`
-2. Update `Status: Completed`
-3. Set `Completed:` to today's date (YYYY-MM-DD)
-4. Add `Implementation:` with a brief summary of what was built
+1. Check the checkbox for the item in `claude-to-do-list.md`: Change `- [ ]` to `- [x]`
+2. Update the item's `Status: Completed` in `claude-to-do-list.md`
+3. Set the item's `Completed:` to today's date (YYYY-MM-DD) in `claude-to-do-list.md`
+4. Add the item's `Implementation:` with a brief summary of what was built in `claude-to-do-list.md`
 
 ## Step 3: Continue the Loop
 
@@ -103,10 +103,13 @@ After processing all items, provide a summary:
 Expected format in `claude-to-do-list.md`:
 
 ```markdown
-- [ ] Task name
+- [ ] Pending Task Example Name
+    Description: Feature description for PRD generation
+
+- [x] Completed Task Example Name
     Description: Feature description for PRD generation
     PRD: PRD-XXX (or empty)
-    Status: Pending | In Progress | Completed | Blocked
+    Status: Completed | In Progress | Completed | Blocked 
     Started: YYYY-MM-DD
     Completed: YYYY-MM-DD
     Implementation: (added on completion)
